@@ -38,7 +38,10 @@ const OrderTicketForm = () => {
     e.preventDefault();
 
     if(order.client && order.email && order.day && order.seat) {
-      dispatch(addSeatRequest(order));
+      await dispatch(addSeatRequest(order));
+
+      dispatch(loadSeatsRequest());
+      
       setOrder({
         client: '',
         email: '',

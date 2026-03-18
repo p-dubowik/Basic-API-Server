@@ -21,9 +21,9 @@ router.route('/seats/:id').get((req, res) => {
 })
 
 router.route('/seats').post((req, res) => {
-    const { author, text } = req.body;
+    const { client, email, day, seat } = req.body;
     const id = uuidv4();
-    const newSeat = { id, author, text };
+    const newSeat = { id, client, email, day, seat };
     db.seats.push(newSeat)
     res.json({message: 'OK'});
 })
