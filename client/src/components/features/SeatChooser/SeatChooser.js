@@ -10,13 +10,7 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
   const seats = useSelector(getSeats);
   const requests = useSelector(getRequests);
 
-  //Free seats calculation
-  const seatsForChosenDay = (seats || []).filter(seat => seat.day === chosenDay);
 
-  const totalSeats = 50;
-  const takenSeats = seatsForChosenDay.length;
-  const freeSeats = totalSeats - takenSeats;
-  //===================
 
   const [socket, setSocket] = useState();
   
@@ -29,7 +23,7 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
 
   useEffect(() => {
 
-    const socket = io(process.env.NODE_ENV === 'production' ? 'https://basic-api-server-ucbu.onrender.com/' : 'ws://localhost:8000', { transports: ['websocket'] });
+    const socket = io(process.env.NODE_ENV === 'production' ? 'https://basic-api-server-ucbu.onrender.com' : 'http://localhost:8000', { transports: ['websocket'] });
     setSocket(socket);
 
     socket.on('seatsUpdated', seats => dispatch(loadSeats(seats)));
@@ -39,6 +33,14 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
       socket.disconnect();
     };
   }, []);
+
+    //Free seats calculation
+  const seatsForChosenDay = (seats || []).filter(seat => seat.day === chosenDay);
+
+  const totalSeats = 50;
+  const takenSeats = seatsForChosenDay.length;
+  const freeSeats = seats.length > 0 ? totalSeats - takenSeats : null;
+  //===================
   
 
   const isTaken = (seatId) => {
