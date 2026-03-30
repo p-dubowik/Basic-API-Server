@@ -11,7 +11,7 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
   const requests = useSelector(getRequests);
 
   //Free seats calculation
-  const seatsForChosenDay = seats.filter(seat => seat.day === chosenDay);
+  const seatsForChosenDay = (seats || []).filter(seat => seat.day === chosenDay);
 
   const totalSeats = 50;
   const takenSeats = seatsForChosenDay.length;
@@ -28,7 +28,8 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
 
 
   useEffect(() => {
-    const socket = io(process.env.NODE_ENV === 'production' ? '' : 'ws://localhost:8000', { transports: ['websocket'] });
+
+    const socket = io(process.env.NODE_ENV === 'production' ? 'https://basic-api-server-ucbu.onrender.com/' : 'ws://localhost:8000', { transports: ['websocket'] });
     setSocket(socket);
 
     socket.on('seatsUpdated', seats => dispatch(loadSeats(seats)));
