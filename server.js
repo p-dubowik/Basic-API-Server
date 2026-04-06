@@ -42,7 +42,7 @@ app.use((req, res) => {
 });
 
 
-mongoose.connect('mongodb://0.0.0.0:27017/NewWaveDB', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://paweldubowik27_db_user:Zx8q3K3IqauKtZ8F@cluster0.4y3vrmn.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true });
 const db = mongoose.connection
 
 db.once('open', async () => {
