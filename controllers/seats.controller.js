@@ -39,6 +39,13 @@ exports.new = async (req, res) => {
 
     try{
         const { client, email, day, seat } = req.body;
+
+        //Check if seat is taken
+        const exists = await Seat.findOne({day, seat});
+        if(exists){
+            return res.status(409).json({ message: 'This seat is taken' });
+        }
+
         const newSeat = await new Seat({ 
             client, 
             email, 
@@ -46,14 +53,13 @@ exports.new = async (req, res) => {
             seat 
         });
         await newSeat.save();
+
+        const updatedSeats = await Seat.find();
         
-        req.io.emit('seatsUpdated');
+        req.io.emit('seatsUpdated', updatedSeats);
         res.json(newSeat);
     }
     catch(err) {
-        if(err.code === 11000){
-            res.status(409).json({ message: 'This seat is taken' });
-        }
         res.status(500).json({ message: err.message });
     }
 };
