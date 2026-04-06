@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const db = require('./db')
 const path = require('path');
 const socket = require('socket.io');
+const mongoose = require('mongoose');
+const Seat = require('./models/seats.model');
 
 
 
@@ -41,7 +42,16 @@ app.use((req, res) => {
 });
 
 
+mongoose.connect('mongodb://0.0.0.0:27017/NewWaveDB', { useNewUrlParser: true });
+const db = mongoose.connection
 
+db.once('open', async () => {
+  console.log('Connected to the Database');
+
+  await Seat.syncIndexes();
+  
+});
+db.on('error', err => console.log('Error ' + err));
 
 
 
