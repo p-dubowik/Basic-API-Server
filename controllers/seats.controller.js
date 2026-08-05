@@ -1,4 +1,5 @@
 const Seat = require('../models/seats.model');
+const sanitize = require('mongo-sanitize');
 
 
 
@@ -66,11 +67,15 @@ exports.new = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        const { client, email, day, seat } = req.body;
+        const { client, email, day, seat } = sanitize(req.body);
 
         const seatDB = Seat.findById(req.params.id);
+
         if(seatDB){
-            Seat.updateOne({ _id: req.params.id }, {client: client, email: email, day: day, seat: seat})
+            await Seat.updateOne(
+                { _id: req.params.id }, 
+                { client: client, email: email, day: day, seat: seat }
+            );
             res.json({ message: 'OK' });
         }
         else res.status(404).json({ message: 'Not Found...' });
